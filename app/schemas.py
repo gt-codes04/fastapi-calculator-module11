@@ -1,5 +1,6 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, root_validator
 from typing import Optional, Set
+
 
 class CalculationBase(BaseModel):
     a: float
@@ -13,12 +14,19 @@ class CalculationBase(BaseModel):
             raise ValueError(f"type must be one of {allowed}")
         return v.lower()
 
+
 class CalculationCreate(CalculationBase):
-    @validator("b")
-    def validate_division(cls, value, values):
-        if values.get("type") == "div" and value == 0:
+
+    @root_validator
+    def check_division(cls, values):
+        type_ = values.get("type")
+        b = values.get("b")
+
+        if type_ == "div" and b == 0:
             raise ValueError("b cannot be zero for division")
-        return value
+
+        return values
+
 
 class CalculationRead(CalculationBase):
     id: int
