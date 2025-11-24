@@ -8,7 +8,7 @@ from app import models
 
 TEST_DATABASE_URL = os.getenv(
     "TEST_DATABASE_URL",
-    "postgresql+psycopg2://postgres:postgres@localhost:5432/test_calculator_db",
+    "sqlite:///:memory:"
 )
 
 
